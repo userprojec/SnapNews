@@ -84,7 +84,7 @@ def main():
 
                 st.write("---")
             except Exception as e:
-                st.error(f"Error fetching article: {e}")
+                pass  # Skip the error without displaying any message
 
     else:
         st.error("Failed to fetch the latest news articles.")
