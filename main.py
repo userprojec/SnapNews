@@ -44,44 +44,48 @@ def main():
             # st.write(f"### Article {i}")
             article_url = article['url']
             article_obj = Article(article_url)
-            article_obj.download()
-            article_obj.parse()
+            try:
+                article_obj.download()
+                article_obj.parse()
 
-            # Paraphrase the title
-            title = article['title']  # Paraphrase the title
+                # Paraphrase the title
+                title = article['title']  # Paraphrase the title
 
-            # Summarize the content using LSA algorithm
-            summarized_content = summarize_with_lsa(article_obj.text)  # Summarize the content
+                # Summarize the content using LSA algorithm
+                summarized_content = summarize_with_lsa(article_obj.text)  # Summarize the content
 
-            # Link to the original article source
-            source_url = article['url']
+                # Link to the original article source
+                source_url = article['url']
 
-            # Display the article content and summary
-            st.write(f"**{title}**")
+                # Display the article content and summary
+                st.write(f"**{title}**")
 
-            # Create a two-column layout
-            col1, col2 = st.columns([3, 1])
+                # Create a two-column layout
+                col1, col2 = st.columns([3, 1])
 
-            # Display content summary in the left column
-            with col1:
-                st.write(f"{summarized_content}")
-                st.write(f"**Published At:** {article['publishedAt']}")
-                st.write(
-                    f"**Source:** [{article['source']['name']}]({source_url})")  # Link to the original article source
+                # Display content summary in the left column
+                with col1:
+                    st.write(f"{summarized_content}")
+                    st.write(f"**Published At:** {article['publishedAt']}")
+                    st.write(
+                        f"**Source:** [{article['source']['name']}]({source_url})")  # Link to the original article source
 
-            # Display the article image in the right column if available
-            with col2:
-                if 'urlToImage' in article:
-                    image_url = article['urlToImage']
-                    try:
-                        image = Image.open(BytesIO(requests.get(image_url).content))
-                        st.image(image, caption="Image Source: " + article['source']['name'], use_column_width=False, width=300)
-                    except Exception as e:
-                        pass  # If image loading fails, do nothing
-                else:
-                    pass  # If no image available, leave the column blank
+                # Display the article image in the right column if available
+                with col2:
+                    if 'urlToImage' in article:
+                        image_url = article['urlToImage']
+                        try:
+                            image = Image.open(BytesIO(requests.get(image_url).content))
+                            st.image(image, caption="Image Source: " + article['source']['name'], use_column_width=False, width=300)
+                        except Exception as e:
+                            pass  # If image loading fails, do nothing
+                    else:
+                        pass  # If no image available, leave the column blank
 
-            st.write("---")
+                st.write("---")
+            except Exception as e:
+                st.error(f"Error fetching article: {e}")
+
     else:
         st.error("Failed to fetch the latest news articles.")
 
